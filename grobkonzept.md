@@ -1,0 +1,1 @@
+# Webportal für PV-Kennlinien - Grobkonzept
