@@ -1,0 +1,12 @@
+- Detailseite modular aufbauen (Kennlinien, Fehleranalyse/Downloads, Diskussionen, etc.)
+- Hellkennlinien bei 1000W/m^2, 25°C
+- Dunkelkennlinie für prognose von hellkennlinie
+- Projektleiter benennen
+- Protokollführer
+- Schnittstellenmanager bestimmen
+- 1 Person für Backend
+
+- Grundlagen erarbeiten
+- Use-Cases
+- Architektur Schema / Übersicht
+- Treffzeiten nach Stundenplan
