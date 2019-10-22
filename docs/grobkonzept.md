@@ -25,9 +25,12 @@ Im Laufe der Woche wird dieses Konzept noch angepasst.
 
 ### Arbeitsteilung im Team
 
+- Projektleiter: Moritz
+- Protokollführer: Moritz
 - Dokumentation: Jeder kümmert sich darum, die eigenen Fortschritte zu dokumentieren
-- Backend: Moritz, Hannes
-- Frontend: Michelle, Christiane
+- Schnittstellenmanager: Michelle
+- Backend: Hannes
+- Frontend: Michelle, Christiane, Moritz
 
 Kann (bzw. wird) sich noch ändern, wenn wir mehr Informationen im Laufe des Projekts bekommen.
 Natürlich arbeitet auch nicht jeder ausschließlich an einer Stelle, sondern übergreifend dort, wo es benötigt wird.
@@ -71,6 +74,7 @@ Die Schnittstelle zum Auftraggeber wird durch einen regelmäßigen Austausch in 
  - Anzeigen der eigenen Photovoltaikanlagen/Module
   - Rechtesystem für Datenzugriff
  - Anzeige der Kennlinie eines eigenen Moduls und einer anderen Kennlinie (Durchschnitt)
+ - Detailseite modular aufbauen (Kennlinien, Fehleranalyse/Downloads, Diskussionen, etc.)
 
 ### Fragen / Vorschläge zu bestehenden Anforderungen
 
