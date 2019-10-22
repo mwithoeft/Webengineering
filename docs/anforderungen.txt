@@ -10,3 +10,10 @@
 - Use-Cases
 - Architektur Schema / Übersicht
 - Treffzeiten nach Stundenplan
+
+- Herstellerliste in der Suche
+- Wenn man reinklickt nur Hersteller und bei der Suche dann auch Module
+
+- Startseite Suche für die Modulseite -> Suche als Komponent
+- Modulseite hat auch einen Header der die Suche beinhaltet
+- Buchstaben auswählen

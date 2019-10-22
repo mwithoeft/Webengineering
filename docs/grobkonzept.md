@@ -75,6 +75,9 @@ Die Schnittstelle zum Auftraggeber wird durch einen regelmäßigen Austausch in 
   - Rechtesystem für Datenzugriff
  - Anzeige der Kennlinie eines eigenen Moduls und einer anderen Kennlinie (Durchschnitt)
  - Detailseite modular aufbauen (Kennlinien, Fehleranalyse/Downloads, Diskussionen, etc.)
+ - Startseite Suche für die Modulseite -> Suche als Komponent
+ - Modulseite hat auch einen Header der die Suche beinhaltet
+ - Buchstaben auswählen
 
 ### Fragen / Vorschläge zu bestehenden Anforderungen
 
