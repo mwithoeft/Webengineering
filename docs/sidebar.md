@@ -2,4 +2,4 @@
 
 * [Übersicht](/)
 * [Grobkonzept](grobkonzept.md)
-* [FAQ] [faq.md]
+* [FAQ](faq.md)
