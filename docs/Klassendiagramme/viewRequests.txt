@@ -1,0 +1,1 @@
+SELECT t.dataset, COUNT(id) AS view_count FROM TblObservedObjectDataSetViewRequest t WHERE t.id = :id GROUP BY t.dataset ORDER BY view_count DESC
