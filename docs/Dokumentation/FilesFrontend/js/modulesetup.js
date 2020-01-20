@@ -2,12 +2,24 @@
  * @module ModuleSetup
  */
 
+//Saves the current progress in the setupAll() function
 let currentStep = -1;
+
+//Saves the current progress in the installDatatemplates() function
+let currentTemplate = -1;
+
+//Array that stores the order of functions needing to be called in the setupAll() function
 let setupStepQueue = [];
 
+//Options variable to group easily customizable variables
 let options = {
-    datatemplate1: "de.fhbielefeld.scl.database.datatemplates.PVModulDatenblattType",
-    datatemplate2: "de.fhbielefeld.scl.database.datatemplates.PVServeDunkelkennlinienDeviceType",
+    datatemplates: [
+        "de.fhbielefeld.scl.database.datatemplates.PVModulDatenblattType",
+        "de.fhbielefeld.scl.database.datatemplates.PVServeDunkelkennlinienDeviceType",
+        "de.fhbielefeld.scl.database.datatemplates.LaborHellkennlinienDeviceType",
+        "de.fhbielefeld.scl.database.datatemplates.LaborDunkelkennlinienDeviceType",
+        "de.fhbielefeld.scl.database.datatemplates.PVPMHellkennlinienDeviceType",
+    ],
     dummyObservedObjectType: {
         name: "Dummy ObservedObjectTypeTest",
         description: "Dummy Typ um Kennlinienspeicherung fuer ModulTypen zu erlauben",
@@ -20,11 +32,18 @@ let options = {
     },
 };
 
+/**
+ * Calls all setup functions in ascending order
+ */
 function setupAll(){
     currentStep = 0;
     setupStepQueue = [installDatatemplates, dummyOoTypeCreate, createOoForModuleTypes];
     installDatatemplates();
 }
+
+/**
+ * Initiates the next step in the setup, if it is not yet done
+ */
 function nextStep(){
     if(currentStep < setupStepQueue.length - 1){
         currentStep++;
@@ -32,20 +51,51 @@ function nextStep(){
     }
 }
 
+/**
+ * Initiates the next datatemplate installation call, if it is not yet done
+ */
+function nextDatatemplate(){
+    if(currentTemplate < options.datatemplates.length - 1){
+        currentTemplate++;
+        installDatatemplate(options.datatemplates[currentTemplate]);
+    } else {
+        nextStep();
+    }
+}
+
+/**
+ * Initiates the installation of all needed datatemplates. Called from UI.
+ */
 function installDatatemplates(){
     console.log("Installing datatemplates...");
-    remoteHandler.fetchGet("datatemplate/install", {name: options.datatemplate1}, false).then(datatemplateModuleTypeCallback).catch(function (error) {
+    nextDatatemplate();
+}
+
+/**
+ * Installs a single datatemplate by its fully qualified name
+ * @param {string} templateName - The datatemplates name
+ */
+function installDatatemplate(templateName){
+    remoteHandler.fetchGet("datatemplate/install", {name: templateName}, false).then(datatemplateModuleTypeCallback).catch(function (error) {
         UIkit.notification({
             message: 'Das Datentemplate >'+templateName+'< konnte nicht installiert werden. ' + error,
             timeout: SWAC_config.notifyDuration,
             pos: 'top-center',
             status: 'error'
         });
+        
+        nextDatatemplate();
     });
 }
+
+/**
+ * Callback function after a datatemplate has been installed. Implicitly calls the
+ * next datatemplate installation.
+ * @param {object} data - The parsed JSON response returned from the server
+ */
 function datatemplateModuleTypeCallback(data){
     let infotext = 'Das Datentemplate wurde angelegt.';
-    if (typeof data.warnings !== 'undefined') {
+    if (typeof data.warnings !== 'undefined' && typeof data.errors !== 'undefined') {
         infotext = 'Das Datentemplate ist bereits installiert.';
     }
 
@@ -56,34 +106,15 @@ function datatemplateModuleTypeCallback(data){
         status: 'success'
     });
     
-    remoteHandler.fetchGet("datatemplate/install", {name: options.datatemplate2}, false).then(datatemplateKennlinienCallback).catch(function (error) {
-        UIkit.notification({
-            message: 'Das Datentemplate >'+templateName+'< konnte nicht installiert werden. ' + error,
-            timeout: SWAC_config.notifyDuration,
-            pos: 'top-center',
-            status: 'error'
-        });
-    });
-}
-function datatemplateKennlinienCallback(data){
-    let infotext = 'Das Datentemplate wurde angelegt.';
-    if (typeof data.warnings !== 'undefined') {
-        infotext = 'Das Datentemplate ist bereits installiert.';
-    }
-
-    UIkit.notification({
-        message: infotext,
-        timeout: SWAC_config.notifyDuration,
-        pos: 'top-center',
-        status: 'success'
-    });
-    
-    nextStep();
+    nextDatatemplate();
 }
 
+/**
+ * Starts a request to look for an existing dummy ObservedObjectType. Called from UI.
+ */
 function dummyOoTypeCreate(){
     console.log("Creating dummy oo type...");
-    remoteHandler.fetchGet("observedobjecttype/getByName", {name: options.dummyObservedObjectType.name}, false).then(function(data){
+    remoteHandler.fetchGet("observedobjecttype/getByName", {name: options.dummyObservedObjectType.name}, true).then(function(data){
         UIkit.notification({
             message: "Dummy ObservedObjectType existiert bereits",
             timeout: SWAC_config.notifyDuration,
@@ -91,9 +122,15 @@ function dummyOoTypeCreate(){
             status: 'success'
         });
         nextStep();
-    }).catch(dummyOoTypeLookupCallback);
+    }).catch(dummyOoTypeLookupCallback); //Error, da wir einen Fehler erwarten, wenn ein frischer Server den OoType nicht findet
 }
-function dummyOoTypeLookupCallback(error){ //Error, da wir einen Fehler erwarten, wenn ein frischer Server den OoType nicht findet
+
+/**
+ * Callback function after the lookup for any existing dummy ObservedObjectType
+ * successfully failed. Starts a request to create the dummy ObservedObjectType.
+ * @param {object} error - The error information, unused
+ */
+function dummyOoTypeLookupCallback(error){
     console.log("Dummy ObservedObjectType not found, creating...");
     let data = {
         name: options.dummyObservedObjectType.name,
@@ -111,6 +148,11 @@ function dummyOoTypeLookupCallback(error){ //Error, da wir einen Fehler erwarten
         nextStep();
     });
 }
+
+/**
+ * Callback function after the dummy ObservedObjectType has been created.
+ * @param {object} data - The parsed JSON response returned from the server
+ */
 function dummyOoTypeCreateCallback(data){
     UIkit.notification({
         message: "Dummy ObservedObjectType wurde angelegt",
@@ -121,6 +163,10 @@ function dummyOoTypeCreateCallback(data){
     nextStep();
 }
 
+/**
+ * Starts a request to look for an existing ObservedObject used for storing
+ * PVModulDatenblaetter. Called from UI.
+ */
 function createOoForModuleTypes(){
     console.log("Creating Oo for module types...");
     remoteHandler.fetchGet("observedobject/listForTypename", {typename: options.moduleTypeObservedObject.typeName}, false).then(ooForModuleTypesListCallback).catch(function(error){
@@ -133,6 +179,13 @@ function createOoForModuleTypes(){
         nextStep();
     });
 }
+
+/**
+ * Callback function after the lookup of any existing ObservedObjects used for
+ * storing PVModulDatenblaetter. Starts a request to create a new ObservedObject
+ * if no existing ones were found.
+ * @param {object} data - The parsed JSON response returned from the server
+ */
 function ooForModuleTypesListCallback(data){
     console.log("Got list of oos for module types, checking list...");
     console.log(data);
@@ -166,6 +219,12 @@ function ooForModuleTypesListCallback(data){
     
     nextStep();
 }
+
+/**
+ * Callback after the ObservedObject for the PVModulDatenblaetter has been
+ * created.
+ * @param {object} data - The parsed JSON response returned from the server
+ */
 function ooForModuleTypesCreateCallback(data){
     UIkit.notification({
         message: "ObservedObject für Modultypen wurde angelegt",

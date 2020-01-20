@@ -1,0 +1,7 @@
+de.fhbielefeld.scl.database.converter
+de.fhbielefeld.scl.database.exceptions
+de.fhbielefeld.scl.database.model
+de.fhbielefeld.scl.database.model.jpa
+de.fhbielefeld.scl.database.model.jpa.dataset
+de.fhbielefeld.scl.database.model.jpa.emtools
+de.fhbielefeld.scl.database.model.jpa.xmladapter

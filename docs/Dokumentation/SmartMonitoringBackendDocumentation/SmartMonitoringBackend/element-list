@@ -1,0 +1,13 @@
+de.fhbielefeld.scl.database.datatemplates
+de.fhbielefeld.scl.database.dyntable
+de.fhbielefeld.scl.database.rest
+de.fhbielefeld.scl.database.rest.remoteobjects
+de.fhbielefeld.scl.database.security.ntru
+de.fhbielefeld.scl.database.security.ntru.io
+de.fhbielefeld.scl.database.security.ntru.io.encode
+de.fhbielefeld.scl.database.security.ntru.math
+de.fhbielefeld.scl.database.security.ntru.util
+de.fhbielefeld.scl.database.system
+de.fhbielefeld.scl.database.system.util
+de.fhbielefeld.scl.scheduler
+de.fhbielefeld.scl.scheduler.jobs
