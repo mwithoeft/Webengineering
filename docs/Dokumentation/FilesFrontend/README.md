@@ -5,7 +5,7 @@ Following, you will see the frontend documentation of the project `SmartMonitori
 
 ## Built With
 
-* [JSDOC3](https://jsdoc.app/) - Used to generate frontend documenation
+* [JSDOC3](https://jsdoc.app/) - Used to generate frontend documentation
 
 
 ## Authors
