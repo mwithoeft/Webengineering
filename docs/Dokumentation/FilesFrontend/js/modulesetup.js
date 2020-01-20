@@ -33,7 +33,7 @@ let options = {
 };
 
 /**
- * Calls all setup functions in ascending order
+ * Calls all setup functions in the order they appear in the setup explanation. Called from UI.
  */
 function setupAll(){
     currentStep = 0;
