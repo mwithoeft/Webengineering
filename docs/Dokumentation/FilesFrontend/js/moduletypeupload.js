@@ -82,7 +82,7 @@ function sendModule(data) {
     $.ajax({
         contentType: 'application/json',
         type: "POST",
-        url: "/SmartMonitoringBackend/data/create",
+        url: SWAC_config.datasources[0].replace('[fromName]', "data/create"),
         data: data,
         success: function(id, textStatus, request){
             module_id = id["id"];
@@ -104,7 +104,7 @@ function sendImage(data) {
         dataType: "text",
         processData: false,
         type: "POST",
-        url: "/SmartMonitoringBackend/media/create",
+        url: SWAC_config.datasources[0].replace('[fromName]', "media/create"),
         data: data,
         success: function(text, textStatus, request){
             imageuploadCallback(text);
@@ -122,7 +122,7 @@ function sendImage(data) {
 function linkModuleMedia() {
     $.ajax({ 
         type: "GET",
-        url: `/SmartMonitoringBackend/mediajoinobservedobjectdataset/create?ooid=1&mediaid=${media_id}&dataset=${module_id}`,
+        url: SWAC_config.datasources[0].replace('[fromName]', `mediajoinobservedobjectdataset/create?ooid=1&mediaid=${media_id}&dataset=${module_id}`),
         success: function(data, textStatus, request){
             forwardToModuledetail();
         },
