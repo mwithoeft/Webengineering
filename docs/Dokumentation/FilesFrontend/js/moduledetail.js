@@ -3,10 +3,10 @@
  */
 var kennlinienOOid = 0;
 var dummy_type_id = 0;
-var kennlinien = [];
 var active_kennlinie = [];
 var active_kennlinie_index = 0;
 var module_name = "";
+var kennlinien_type_index = 0;
 var kennlinien_types = [];
 var kennlinien_types_data = [];
 
@@ -87,8 +87,13 @@ function readKennlinien() {
                 url: '/SmartMonitoringBackend/data/getSets?ooid=' + kennlinien_id 
             }).always(function (data){
                 saveData(data.list);
+                console.log("KENNLINIEN");
             });
         }
+                        console.log(kennlinien_types_data);
+                console.log(kennlinien_types);
+                                console.log(active_kennlinie);
+
     });
 }
 
@@ -180,18 +185,21 @@ function saveData(list) {
         kennlinie = [];
     }
     kennlinien_types_data.push(kennlinien);
-    active_kennlinie = kennlinien[active_kennlinie_index];
+    active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
 }
 
 /**
  * Displays the dataset of the next curve in the list.
  */
 function nextKennlinie() {
-    if(++active_kennlinie_index > kennlinien.length) {
+    if(++active_kennlinie_index > kennlinien_types_data[kennlinien_type_index].length - 1) {
         active_kennlinie_index = 0;
     }
-    active_kennlinie = kennlinien[active_kennlinie_index];
-    document.getElementById("chart_example").swac_comp.drawCharts();
+    console.log(kennlinien_types_data);
+    active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
+    //document.getElementById("chart_example").swac_comp.drawCharts(active_kennlinie);
+    console.log("ACTIVE:" + kennlinien_type_index + ", " + active_kennlinie_index);
+    console.log(active_kennlinie);
 }
 
 /**
@@ -199,10 +207,13 @@ function nextKennlinie() {
  */
 function prevKennlinie() {
     if(--active_kennlinie_index < 0) {
-        active_kennlinie_index = kennlinien.length - 1;
+        active_kennlinie_index = kennlinien_types_data[kennlinien_type_index].length - 1;
     }
-    active_kennlinie = kennlinien[active_kennlinie_index];
-    document.getElementById("chart_example").swac_comp.drawCharts();
+    console.log(kennlinien_types_data);
+    active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
+    //document.getElementById("chart_example").swac_comp.drawCharts(active_kennlinie);
+    console.log("ACTIVE:" + kennlinien_type_index + ", " + active_kennlinie_index);
+    console.log(active_kennlinie);
 }
 
 /**
@@ -210,18 +221,16 @@ function prevKennlinie() {
  * characteristic curves.
  */
 function activateDunkelkennlinien() {
-   for(let i = 0; i < kennlinien_types.length; i++) {
-        if(kennlinien_types[i].name === "PVServe Dunkelkennlinien") {
-            kennlinien = kennlinien_types_data[i];
-        }
-    }
-    if(kennlinien === undefined){
-        active_kennlinie = [];
-    }
-    else{
-        active_kennlinie = kennlinien[active_kennlinie_index];
+    for(let i = 0; i < kennlinien_types.length; i++) {
+         if(kennlinien_types[i].name === "PVServe Dunkelkennlinien") {
+            active_kennlinie_index = 0;
+            kennlinien_type_index = i;
+            active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
+         }
     }
     document.getElementById("chart_example").swac_comp.drawCharts();
+    console.log("ACTIVE:" + kennlinien_type_index + ", " + active_kennlinie_index);
+    console.log(active_kennlinie);
 }
 
 /**
@@ -230,20 +239,32 @@ function activateDunkelkennlinien() {
  */
 function activateHellkennlinien() {
     for(let i = 0; i < kennlinien_types.length; i++) {
-        if(kennlinien_types[i].name === "PVPM Hellkennlinien") {
-            kennlinien = kennlinien_types_data[i];
-        }
+         if(kennlinien_types[i].name === "PVPM Hellkennlinien") {
+            active_kennlinie_index = 0;
+            kennlinien_type_index = i;
+            active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
+         }
     }
-    active_kennlinie = kennlinien[active_kennlinie_index];
-    console.log(active_kennlinie);
-    if(kennlinien === undefined){
-    active_kennlinie = [];
-    }
-    else{
-        active_kennlinie = kennlinien[active_kennlinie_index];
-        console.log(active_kennlinie);
-    }    
     document.getElementById("chart_example").swac_comp.drawCharts();
+    console.log("ACTIVE:" + kennlinien_type_index + ", " + active_kennlinie_index);
+    console.log(active_kennlinie);
+}
+
+/**
+ * Displays the dataset of the first curve in the list of unilluminated labor
+ * characteristic curves.
+ */
+function activateLaborkennlinien() {
+    for(let i = 0; i < kennlinien_types.length; i++) {
+         if(kennlinien_types[i].name === "Labor Dunkelkennlinien") {
+            active_kennlinie_index = 0;
+            kennlinien_type_index = i;
+            active_kennlinie = kennlinien_types_data[kennlinien_type_index][active_kennlinie_index];
+         }
+     }
+     document.getElementById("chart_example").swac_comp.drawCharts();
+     console.log("ACTIVE:");
+     console.log(active_kennlinie);
 }
 
 /**
